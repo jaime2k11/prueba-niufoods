@@ -1,0 +1,14 @@
+sushi1:
+  sku: SKU-001
+  name: Niu Roll Salmón
+  price_cents: 8990
+
+sushi2:
+  sku: SKU-002
+  name: California Ebi
+  price_cents: 7490
+
+sushi3:
+  sku: SKU-003
+  name: Avocado Roll
+  price_cents: 6990

@@ -1,0 +1,11 @@
+prov:
+  code: PROV
+  name: Niu Foods Providencia
+
+lcon:
+  code: LCON
+  name: Niu Foods Las Condes
+
+nuno:
+  code: NUNO
+  name: Niu Foods Ñuñoa
