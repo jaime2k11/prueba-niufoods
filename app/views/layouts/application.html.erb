@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || 'NiuFoods Órdenes' %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <header>
+      <% if logged_in? %>
+        <span>Sesión: <%= current_user.email %></span>
+        <%= button_to 'Cerrar sesión', logout_path, method: :delete %>
+      <% else %>
+        <%= link_to 'Iniciar sesión', login_path %>
+      <% end %>
+    </header>
+    <main>
+      <%= yield %>
+    </main>
+  </body>
+</html>
