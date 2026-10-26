@@ -3,7 +3,7 @@ class DispatchOrderJob < ApplicationJob
   queue_as :default
 
   # Definición de reintentos ante errores (conexión/timeouts/errores 5xx, etc)
-  retry_on Stores::DispatchClient::DispatchError, wait: :exponentially_longer, attempts: 5
+  retry_on Stores::DispatchClient::DispatchError, wait: :polynomially_longer, attempts: 5
 
   def perform(order_id)
     order = Order.find_by(id: order_id)
