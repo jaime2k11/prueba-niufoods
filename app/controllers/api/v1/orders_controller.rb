@@ -2,13 +2,16 @@ module Api
   module V1
     class OrdersController < Api::BaseController
       def create
-        result = Orders::CreateOrder.call(order_params)
+        result = with_idempotency do
+          svc_result = Orders::CreateOrder.call(order_params)
 
-        if result.success?
-          render json: result.data, status: :created
-        else
-          render json: { errors: result.errors }, status: :unprocessable_content
+          if svc_result.success?
+            { status: :created, body: svc_result.data }
+          else
+            { status: :unprocessable_content, body: { errors: svc_result.errors } }
+          end
         end
+        render_from_result(result) unless performed?
       rescue ActionDispatch::Http::Parameters::ParseError
         render json: { errors: ['Invalid JSON payload'] }, status: :bad_request
       rescue ArgumentError => e

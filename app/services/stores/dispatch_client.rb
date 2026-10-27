@@ -21,9 +21,13 @@ module Stores
       response = HTTParty.post(
         "#{@base_url}/stores/#{order.try(:restaurant)&.try(:code) || 'UNKNOWN'}/orders",
         body: payload.to_json,
-        headers: { 'Content-Type' => 'application/json' },
+        headers: { 'Content-Type' => 'application/json', 'Idempotency-Key' => "order-#{order.id}" },
         timeout: 60
       )
+
+      if response.code.to_i >= 400 && response.code.to_i < 500
+        raise DispatchError, "Store respondió con status #{response.code}"
+      end
 
       unless response.success?
         raise DispatchError, "Store respondió con status #{response.code}"

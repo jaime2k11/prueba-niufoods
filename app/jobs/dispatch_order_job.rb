@@ -9,6 +9,11 @@ class DispatchOrderJob < ApplicationJob
     order = Order.find_by(id: order_id)
     return unless order
 
+    return if order.dispatch_status_sent?
+
+    order.increment!(:dispatch_attempts)
+    order.update!(last_dispatched_at: Time.current)
+
     # Se marca como enviado si el despacho fue exitoso
     Stores::DispatchClient.new.call(order)
     order.update!(dispatch_status: 'sent') if order.respond_to?(:dispatch_status=)

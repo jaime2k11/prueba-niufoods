@@ -10,9 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_10_24_215429) do
+ActiveRecord::Schema[7.1].define(version: 2026_10_27_005527) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "idempotency_keys", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "request_hash"
+    t.bigint "order_id"
+    t.integer "status_code"
+    t.text "response_body"
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_idempotency_keys_on_expires_at"
+    t.index ["key"], name: "index_idempotency_keys_on_key", unique: true
+    t.index ["order_id"], name: "index_idempotency_keys_on_order_id"
+  end
 
   create_table "order_items", force: :cascade do |t|
     t.bigint "order_id", null: false
@@ -40,6 +54,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_24_215429) do
     t.text "dispatch_error"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "dispatch_attempts", default: 0, null: false
+    t.datetime "last_dispatched_at"
     t.index ["created_at"], name: "index_orders_on_created_at"
     t.index ["dispatch_status"], name: "index_orders_on_dispatch_status"
     t.index ["restaurant_id", "created_at"], name: "index_orders_on_restaurant_id_and_created_at"
@@ -75,6 +91,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_10_24_215429) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "idempotency_keys", "orders"
   add_foreign_key "order_items", "orders", on_delete: :cascade
   add_foreign_key "order_items", "products", on_delete: :restrict
   add_foreign_key "orders", "restaurants", on_delete: :restrict
