@@ -50,6 +50,9 @@ gem "bcrypt", "~> 3.1.7"
 # Carga de variables desde .env (para mantener archivo database.yml genérico subido en repo)
 gem "dotenv-rails", groups: [:development, :test]
 
+# HAML para vistas del dashboard
+gem "haml-rails"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]

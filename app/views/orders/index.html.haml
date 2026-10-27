@@ -1,0 +1,40 @@
+- content_for :title, 'Órdenes'
+
+.orders-header
+  %h1 Órdenes ingresadas
+  %p.subtitle Listado de órdenes recibidas por la API
+
+.orders-table-wrapper
+  %table.orders-table
+    %thead
+      %tr
+        %th ID Orden
+        %th Restaurante
+        %th Tipo
+        %th Monto Total
+        %th Estado Despacho
+        %th Fecha/Hora Creación
+        %th Acciones
+    %tbody
+      - if @orders.any?
+        - @orders.each do |order|
+          %tr
+            %td= "##{order.id}"
+            %td
+              = order.restaurant&.name
+              %br
+              %small= order.restaurant&.code
+            %td= render partial: 'order_badges', locals: { order: order, type: :order_type }
+            %td= "$#{number_with_delimiter(order.total_cents)} CLP"
+            %td= render partial: 'order_badges', locals: { order: order, type: :dispatch_status }
+            %td= order.created_at.strftime("%d/%m/%Y %H:%M")
+            %td= link_to 'Ver detalle', order_path(order), class: 'btn-link'
+      - else
+        %tr
+          %td.empty-state{ colspan: 7 } No hay órdenes registradas
+
+.pagination
+  - if @prev_offset != params[:offset].to_i
+    = link_to '← Anterior', orders_path(offset: @prev_offset), class: 'btn-pagination'
+  - if @has_more
+    = link_to 'Siguiente →', orders_path(offset: @next_offset), class: 'btn-pagination'

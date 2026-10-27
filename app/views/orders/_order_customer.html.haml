@@ -1,0 +1,13 @@
+.order-customer-section
+  %h2 Datos del cliente
+  .info-grid
+    .info-item
+      %label Nombre
+      %p= order.customer_name
+    .info-item
+      %label Teléfono
+      %p= order.customer_phone
+    - if order.order_type_delivery?
+      .info-item.full-width
+        %label Dirección de entrega
+        %p= order.delivery_address

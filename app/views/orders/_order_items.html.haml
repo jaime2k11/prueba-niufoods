@@ -1,0 +1,21 @@
+.order-items-section
+  %h2 Productos de la orden
+  %table.items-table
+    %thead
+      %tr
+        %th Producto
+        %th SKU
+        %th Cantidad
+        %th Precio Unitario
+        %th Subtotal
+    %tbody
+      - order.order_items.each do |item|
+        %tr
+          %td= item.product&.name
+          %td= item.product&.sku
+          %td= item.quantity
+          %td= "$#{number_with_delimiter(item.unit_price_cents)} CLP"
+          %td= "$#{number_with_delimiter(item.subtotal_cents)} CLP"
+      %tr.total-row
+        %td{ colspan: 4 } Total
+        %td= "$#{number_with_delimiter(order.total_cents)} CLP"

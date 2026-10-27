@@ -1,0 +1,36 @@
+- content_for :title, "Orden ##{@order.id}"
+
+.order-detail-header
+  = link_to '← Volver al listado', orders_path, class: 'btn-link'
+  %h1 Orden ##{@order.id}
+
+.order-detail-card
+  .card-header
+    %h2 Información general
+  .info-grid
+    .info-item
+      %label Restaurante
+      %p= "#{@order.restaurant&.name} (#{@order.restaurant&.code})"
+    .info-item
+      %label Tipo de pedido
+      %p= render partial: 'order_badges', locals: { order: @order, type: :order_type }
+    .info-item
+      %label Estado de despacho
+      %p= render partial: 'order_badges', locals: { order: @order, type: :dispatch_status }
+    .info-item
+      %label Monto total
+      %p.total-amount= "$#{number_with_delimiter(@order.total_cents)} CLP"
+    .info-item
+      %label Fecha de creación
+      %p= @order.created_at.strftime("%d/%m/%Y %H:%M:%S")
+    - if @order.dispatched_at
+      .info-item
+        %label Fecha de despacho
+        %p= @order.dispatched_at.strftime("%d/%m/%Y %H:%M:%S")
+    - if @order.dispatch_error.present?
+      .info-item.full-width
+        %label Error de despacho
+        %p.error-text= @order.dispatch_error
+
+= render partial: 'order_customer', locals: { order: @order }
+= render partial: 'order_items', locals: { order: @order }

@@ -1,0 +1,18 @@
+- case local_assigns[:type]
+- when :order_type
+  - if order.order_type_pickup?
+    %span.badge.badge-info Retiro
+  - else
+    %span.badge.badge-primary Delivery
+- when :dispatch_status
+  - case order.dispatch_status
+  - when 'pending'
+    %span.badge.badge-warning Pendiente
+  - when 'sent'
+    %span.badge.badge-success Enviado
+  - when 'error'
+    %span.badge.badge-danger Error
+  - else
+    %span.badge= order.dispatch_status
+- else
+  = local_assigns[:content]
